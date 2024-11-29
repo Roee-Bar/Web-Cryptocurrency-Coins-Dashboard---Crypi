@@ -1,8 +1,20 @@
-// pages/binance.js
 import { useEffect, useState } from 'react';
 
+const COINS = [
+  { symbol: 'BTCUSDT', name: 'Bitcoin', image: '/images/bitcoin.png' },
+  { symbol: 'ETHUSDT', name: 'Ethereum', image: '/images/ethereum.webp' },
+  { symbol: 'BNBUSDT', name: 'Binance', image: '/images/binance.png' },
+  { symbol: 'ADAUSDT', name: 'Cardano', image: '/images/cardano.png' },
+  { symbol: 'SOLUSDT', name: 'Solana', image: '/images/solana.jpg' },
+  { symbol: 'XRPUSDT', name: 'Ripple', image: '/images/ripple.png' },
+  { symbol: 'DOGEUSDT', name: 'Dogecoin', image: '/images/doge.png' },
+  { symbol: 'LTCUSDT', name: 'Litecoin', image: '/images/litecoin.png' },
+  { symbol: 'XLMUSDT', name: 'Stellar Lumens', image: '/images/xlm.png' },
+  { symbol: 'DOTUSDT', name: 'Polkadot', image: '/images/polkadot.png' },
+];
+
 const BinancePage = () => {
-  const [priceData, setPriceData] = useState(null);
+  const [prices, setPrices] = useState({});
 
   useEffect(() => {
     const eventSource = new EventSource('/api/binance');
@@ -10,7 +22,7 @@ const BinancePage = () => {
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        setPriceData(data);
+        setPrices(data);
       } catch (err) {
         console.error('Error parsing SSE data:', err);
       }
@@ -27,24 +39,27 @@ const BinancePage = () => {
   }, []);
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Binance Live Price Tracker</h1>
-      {priceData ? (
-        <div>
-          <p>
-            <strong>Symbol:</strong> {priceData.symbol}
-          </p>
-          <p>
-            <strong>Price:</strong> ${parseFloat(priceData.price).toFixed(2)}
-          </p>
-          <p>
-            <strong>Last Updated:</strong>{' '}
-            {new Date(priceData.timestamp).toLocaleTimeString()}
-          </p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
+    <div className="container">
+      <h1 className="text-4xl font-bold text-center mb-8">Real-Time Crypto Price Dashboard</h1>
+      <div className="grid-layout">
+        {COINS.map((coin) => (
+          <div key={coin.symbol} className="coin-box">
+            <img
+              src={coin.image}
+              alt={coin.name}
+              className="w-16 h-16 object-cover rounded-full border-2 border-white"
+            />
+            <div>
+              <h2>{coin.name}</h2>
+              <p>
+                {prices[coin.symbol]?.price
+                  ? `$${parseFloat(prices[coin.symbol].price).toFixed(2)}`
+                  : 'Loading...'}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

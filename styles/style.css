@@ -1,0 +1,73 @@
+/* Container Styles */
+.container {
+    padding: 1.5rem;
+}
+
+/* Grid Layout */
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .grid-layout {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .grid-layout {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-layout {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Coin Box Styles */
+.coin-box {
+    padding: 1rem;
+    background-color: #06b6d4; /* Cyan color */
+    color: white;
+    border-radius: 0.75rem; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 1rem; /* Adds space between the image and text */
+    overflow: hidden; /* Prevent overflow of text */
+    word-wrap: break-word; /* Ensure long text wraps within the box */
+}
+
+/* Coin Image Styles */
+.coin-box img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%; /* Make the image circular */
+    border: 2px solid white;
+}
+
+/* Text Styles */
+.coin-box h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem; /* Reduced margin between name and price */
+    white-space: nowrap; /* Prevent the name from wrapping */
+    overflow: hidden; /* Hide overflowed name text */
+    text-overflow: ellipsis; /* Add ellipsis if name is too long */
+}
+
+.coin-box p {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 0.25rem; /* Space between the name and price */
+    white-space: nowrap; /* Prevent price from wrapping */
+    overflow: hidden; /* Hide overflowed price text */
+    text-overflow: ellipsis; /* Add ellipsis if price is too long */
+}
