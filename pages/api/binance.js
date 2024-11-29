@@ -6,7 +6,7 @@ export default function handler(req, res) {
     return;
   }
 
-  const coins = ['btcusdt', 'ethusdt', 'bnbusdt', 'adausdt', 'solusdt','xrpusdt', 'dogeusdt', 'ltcusdt', 'xlmusdt', 'dotusdt']; // Example using XRP
+  const coins = ['btcusdt', 'ethusdt', 'bnbusdt', 'adausdt', 'solusdt','xrpusdt', 'dogeusdt', 'ltcusdt', 'xlmusdt', 'dotusdt']; 
 
   // Set headers for SSE
   res.setHeader('Content-Type', 'text/event-stream');

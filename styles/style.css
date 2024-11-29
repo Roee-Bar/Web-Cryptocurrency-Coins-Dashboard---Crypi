@@ -1,6 +1,8 @@
 /* Container Styles */
 .container {
     padding: 1.5rem;
+    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Light gradient for the background */
+    min-height: 100vh; /* Full viewport height */
 }
 
 /* Grid Layout */
@@ -30,11 +32,11 @@
 
 /* Coin Box Styles */
 .coin-box {
-    padding: 1rem;
-    background-color: #06b6d4; /* Cyan color */
+    padding: 1.25rem;
+    background: linear-gradient(145deg, #06b6d4, #4b89d9); /* Gradient background for coin box */
     color: white;
     border-radius: 0.75rem; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08); /* More pronounced shadow for a floating effect */
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -42,6 +44,12 @@
     gap: 1rem; /* Adds space between the image and text */
     overflow: hidden; /* Prevent overflow of text */
     word-wrap: break-word; /* Ensure long text wraps within the box */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.coin-box:hover {
+    transform: translateY(-5px); /* Lift the box on hover */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
 }
 
 /* Coin Image Styles */
@@ -70,4 +78,14 @@
     white-space: nowrap; /* Prevent price from wrapping */
     overflow: hidden; /* Hide overflowed price text */
     text-overflow: ellipsis; /* Add ellipsis if price is too long */
+    letter-spacing: 0.5px; /* Slightly increase space between characters for better readability */
+}
+
+/* Add a soft background gradient for the page */
+body {
+    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Subtle gradient from light blue to light gray */
+}
+
+h1 {
+    color: #333; /* Dark color for better contrast against the background */
 }

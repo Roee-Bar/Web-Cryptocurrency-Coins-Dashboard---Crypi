@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link'; // Importing Link from Next.js
 
 const COINS = [
   { symbol: 'BTCUSDT', name: 'Bitcoin', image: '/images/bitcoin.png' },
@@ -9,7 +10,7 @@ const COINS = [
   { symbol: 'XRPUSDT', name: 'Ripple', image: '/images/ripple.png' },
   { symbol: 'DOGEUSDT', name: 'Dogecoin', image: '/images/doge.png' },
   { symbol: 'LTCUSDT', name: 'Litecoin', image: '/images/litecoin.png' },
-  { symbol: 'XLMUSDT', name: 'Stellar Lumens', image: '/images/xlm.png' },
+  { symbol: 'XLMUSDT', name: 'Stellar', image: '/images/xlm.png' },
   { symbol: 'DOTUSDT', name: 'Polkadot', image: '/images/polkadot.png' },
 ];
 
@@ -40,7 +41,9 @@ const BinancePage = () => {
 
   return (
     <div className="container">
-      <h1 className="text-4xl font-bold text-center mb-8">Real-Time Crypto Price Dashboard</h1>
+      <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
+        Real-Time Crypto Price Dashboard
+      </h1>
       <div className="grid-layout">
         {COINS.map((coin) => (
           <div key={coin.symbol} className="coin-box">
@@ -56,6 +59,10 @@ const BinancePage = () => {
                   ? `$${parseFloat(prices[coin.symbol].price).toFixed(2)}`
                   : 'Loading...'}
               </p>
+              {/* Make the coin box clickable */}
+              <Link href={`/coin/${coin.symbol}`}>
+                <div className="cursor-pointer text-blue-600 hover:text-blue-800">View Details</div>
+              </Link>
             </div>
           </div>
         ))}
