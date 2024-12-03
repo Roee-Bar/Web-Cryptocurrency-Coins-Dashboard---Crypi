@@ -78,7 +78,7 @@
     white-space: nowrap; /* Prevent price from wrapping */
     overflow: hidden; /* Hide overflowed price text */
     text-overflow: ellipsis; /* Add ellipsis if price is too long */
-    letter-spacing: 0.5px; /* Slightly increase space between characters for better readability */
+    letter-spacing: 0.5px; /* Slightly increase space between characters for better readabilisty */
 }
 
 /* Add a soft background gradient for the page */
