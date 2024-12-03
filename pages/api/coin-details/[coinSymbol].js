@@ -1,13 +1,19 @@
 import { connectToDatabase } from '../../../lib/mongodb'; // Adjust the import path accordingly
 
 export default async function handler(req, res) {
-  const { coinsymbol } = req.query; // Get the coin symbol from the URL
+  // Extract the dynamic route parameter
+  const { coinSymbol } = req.query; // Use coinSymbol instead of coinsymbol
 
   try {
+    // Validate the dynamic route parameter
+    if (!coinSymbol) {
+      return res.status(400).json({ error: 'Coin symbol is required' });
+    }
+
     const { db } = await connectToDatabase();
 
     // Find the coin in the database by symbol
-    const coin = await db.collection('coins').findOne({ symbol: coinsymbol.toUpperCase() });
+    const coin = await db.collection('coins').findOne({ symbol: coinSymbol.toUpperCase() });
 
     if (!coin) {
       return res.status(404).json({ error: 'Coin not found' });

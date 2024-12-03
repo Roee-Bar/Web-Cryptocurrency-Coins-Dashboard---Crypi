@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Link from 'next/link'; // Importing Link from Next.js
+import Link from 'next/link';
 
 const COINS = [
   { symbol: 'BTCUSDT', name: 'Bitcoin', image: '/images/bitcoin.png' },
@@ -40,28 +40,32 @@ const BinancePage = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
       <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
         Real-Time Crypto Price Dashboard
       </h1>
-      <div className="grid-layout">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-screen-lg w-full">
         {COINS.map((coin) => (
-          <div key={coin.symbol} className="coin-box">
+          <div
+            key={coin.symbol}
+            className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
+          >
             <img
               src={coin.image}
               alt={coin.name}
-              className="w-16 h-16 object-cover rounded-full border-2 border-white"
+              className="w-16 h-16 object-cover rounded-full border-2 border-white mb-4"
             />
             <div>
-              <h2>{coin.name}</h2>
-              <p>
+              <h2 className="text-lg font-bold truncate">{coin.name}</h2>
+              <p className="text-xl font-semibold mt-2">
                 {prices[coin.symbol]?.price
                   ? `$${parseFloat(prices[coin.symbol].price).toFixed(2)}`
                   : 'Loading...'}
               </p>
-              {/* Make the coin box clickable */}
               <Link href={`/coin/${coin.symbol}`}>
-                <div className="cursor-pointer text-blue-600 hover:text-blue-800">View Details</div>
+                <div className="mt-4 text-sm font-medium text-white underline hover:text-gray-200 cursor-pointer">
+                  View Details
+                </div>
               </Link>
             </div>
           </div>
