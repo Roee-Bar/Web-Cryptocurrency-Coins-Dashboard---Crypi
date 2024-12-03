@@ -9,10 +9,11 @@ const CoinDetail = () => {
   const [coinDetails, setCoinDetails] = useState(null);
   const [livePrice, setLivePrice] = useState(null);
   const [error, setError] = useState(null);
+  const [loadingSymbol, setLoadingSymbol] = useState(true); // Add a state to track symbol loading
 
-  // Fetch coin details from the database
   useEffect(() => {
     if (symbol) {
+      setLoadingSymbol(false); // Symbol is loaded
       const fetchCoinDetails = async () => {
         try {
           const res = await fetch(`/api/coin-details/${symbol}`);
@@ -30,7 +31,6 @@ const CoinDetail = () => {
     }
   }, [symbol]);
 
-  // Establish SSE connection for live price updates
   useEffect(() => {
     if (symbol) {
       const sse = new EventSource('/api/binance');
@@ -58,24 +58,20 @@ const CoinDetail = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-4 py-8 flex flex-col items-center">
       {/* Back Button */}
-      <Link href="/binance" className="mb-6 text-lg text-blue-600 hover:text-blue-800 underline">← Back to Binance</Link>
+      <Link href="/binance" className="mb-6 text-lg text-blue-600 hover:text-blue-800 underline">
+        ← Back to Binance
+      </Link>
 
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        {coinDetails?.name || symbol.toUpperCase()} Coin Details
+        {coinDetails?.name || (!loadingSymbol ? symbol?.toUpperCase() : 'Loading...')} Coin Details
       </h1>
 
-      {/* Live Price Section */}
-      <div className="mb-6">
-        {livePrice ? (
-          <p className="text-2xl font-semibold text-green-600">
-            Live Price: ${parseFloat(livePrice).toFixed(2)}
-          </p>
-        ) : (
-          <p className="text-lg text-gray-600">Loading live price...</p> // Loading message for live price
-        )}
-      </div>
+      {livePrice && (
+        <p className="text-2xl font-semibold text-green-600 mb-6">
+          Live Price: ${parseFloat(livePrice).toFixed(2)}
+        </p>
+      )}
 
-      {/* Coin Details */}
       {coinDetails ? (
         <div className="bg-white rounded-lg shadow-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-2xl">
           <div className="mb-6 text-center">
