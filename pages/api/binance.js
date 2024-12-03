@@ -6,7 +6,8 @@ export default function handler(req, res) {
     return;
   }
 
-  const coins = ['btcusdt', 'ethusdt', 'bnbusdt', 'adausdt', 'solusdt','xrpusdt', 'dogeusdt', 'ltcusdt', 'xlmusdt', 'dotusdt']; 
+  // Define the coins to listen to
+  const coins = ['btcusdt', 'ethusdt', 'bnbusdt', 'adausdt', 'solusdt', 'xrpusdt', 'dogeusdt', 'ltcusdt', 'xlmusdt', 'dotusdt'];
 
   // Set headers for SSE
   res.setHeader('Content-Type', 'text/event-stream');
@@ -14,9 +15,10 @@ export default function handler(req, res) {
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
+  // Object to store price data
   const prices = {};
 
-  // Stream data every 2 seconds
+  // Function to send updates every 2 seconds
   let lastUpdateTime = Date.now();
   const sendUpdate = () => {
     if (Date.now() - lastUpdateTime >= 2000) {
@@ -25,14 +27,18 @@ export default function handler(req, res) {
     }
   };
 
-  // For each coin, create a separate WebSocket connection
+  // Initialize WebSocket connections for each coin
   coins.forEach((coin) => {
     const binanceSocket = new WebSocket(`wss://stream.binance.com:9443/ws/${coin}@trade`);
 
     binanceSocket.on('message', (data) => {
       const parsedData = JSON.parse(data);
       const { s: symbol, p: price } = parsedData;
+
+      // Update the price data for the coin
       prices[symbol] = { symbol, price };
+
+      // Send updates to the client
       sendUpdate();
     });
 
@@ -40,6 +46,7 @@ export default function handler(req, res) {
       console.error(`WebSocket error for ${coin}:`, err);
     });
 
+    // Close WebSocket on client disconnect
     req.on('close', () => {
       console.log('Client disconnected.');
       binanceSocket.close();
