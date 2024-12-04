@@ -9,11 +9,11 @@ const CoinDetail = () => {
   const [coinDetails, setCoinDetails] = useState(null);
   const [livePrice, setLivePrice] = useState(null);
   const [error, setError] = useState(null);
-  const [loadingSymbol, setLoadingSymbol] = useState(true); // Add a state to track symbol loading
+  const [loading, setLoading] = useState(true);
 
+  // Fetch coin details (mock API for example purposes)
   useEffect(() => {
     if (symbol) {
-      setLoadingSymbol(false); // Symbol is loaded
       const fetchCoinDetails = async () => {
         try {
           const res = await fetch(`/api/coin-details/${symbol}`);
@@ -25,19 +25,22 @@ const CoinDetail = () => {
           }
         } catch (err) {
           setError('Error fetching coin details');
+        } finally {
+          setLoading(false);
         }
       };
       fetchCoinDetails();
     }
   }, [symbol]);
 
+  // Establish SSE connection for live price updates
   useEffect(() => {
     if (symbol) {
       const sse = new EventSource('/api/binance');
 
       sse.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        const priceData = data[symbol.toUpperCase()];
+        const priceData = data[symbol.toUpperCase()]; // Convert symbol to uppercase to match API format
         if (priceData) {
           setLivePrice(priceData.price);
         }
@@ -63,7 +66,7 @@ const CoinDetail = () => {
       </Link>
 
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        {coinDetails?.name || (!loadingSymbol ? symbol?.toUpperCase() : 'Loading...')} Coin Details
+        {coinDetails?.name || (loading ? 'Loading...' : symbol?.toUpperCase())} Coin Details
       </h1>
 
       {livePrice && (
@@ -72,7 +75,9 @@ const CoinDetail = () => {
         </p>
       )}
 
-      {coinDetails ? (
+      {loading ? (
+        <p className="text-gray-500 text-lg">Loading coin details...</p>
+      ) : coinDetails ? (
         <div className="bg-white rounded-lg shadow-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-2xl">
           <div className="mb-6 text-center">
             <img
@@ -87,7 +92,7 @@ const CoinDetail = () => {
           <p className="text-md text-gray-500">{coinDetails?.additionalInfo || 'No additional info available.'}</p>
         </div>
       ) : (
-        <p className="text-gray-500 text-lg">Loading coin details...</p>
+        <p className="text-red-500 text-lg">Error: {error || 'Unable to fetch coin details.'}</p>
       )}
 
       {error && <p className="mt-4 text-red-500 text-lg">{error}</p>}

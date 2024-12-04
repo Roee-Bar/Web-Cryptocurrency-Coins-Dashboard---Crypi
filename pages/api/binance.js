@@ -15,11 +15,11 @@ export default function handler(req, res) {
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
-  // Object to store price data
+  // Store prices
   const prices = {};
-
-  // Function to send updates every 2 seconds
   let lastUpdateTime = Date.now();
+
+  // Function to send data to the client every 2 seconds
   const sendUpdate = () => {
     if (Date.now() - lastUpdateTime >= 2000) {
       res.write(`data: ${JSON.stringify(prices)}\n\n`);
@@ -27,18 +27,18 @@ export default function handler(req, res) {
     }
   };
 
-  // Initialize WebSocket connections for each coin
-  coins.forEach((coin) => {
+  // Set up WebSocket connections for each coin
+  const sockets = coins.map((coin) => {
     const binanceSocket = new WebSocket(`wss://stream.binance.com:9443/ws/${coin}@trade`);
 
     binanceSocket.on('message', (data) => {
       const parsedData = JSON.parse(data);
       const { s: symbol, p: price } = parsedData;
 
-      // Update the price data for the coin
+      // Update price data
       prices[symbol] = { symbol, price };
 
-      // Send updates to the client
+      // Send updated prices to the client
       sendUpdate();
     });
 
@@ -46,11 +46,13 @@ export default function handler(req, res) {
       console.error(`WebSocket error for ${coin}:`, err);
     });
 
-    // Close WebSocket on client disconnect
-    req.on('close', () => {
-      console.log('Client disconnected.');
-      binanceSocket.close();
-      res.end();
-    });
+    return binanceSocket;
+  });
+
+  // Clean up WebSocket connections on client disconnect
+  req.on('close', () => {
+    sockets.forEach((socket) => socket.close());
+    res.end();
+    console.log('Client disconnected, cleaned up WebSocket connections.');
   });
 }
