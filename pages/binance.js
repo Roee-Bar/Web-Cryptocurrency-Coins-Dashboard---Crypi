@@ -18,24 +18,29 @@ const BinancePage = () => {
   const [prices, setPrices] = useState({});
 
   useEffect(() => {
-    const eventSource = new EventSource('/api/binance');
+    const sockets = COINS.map((coin) => {
+      const ws = new WebSocket(
+        `wss://stream.binance.com:9443/ws/${coin.symbol.toLowerCase()}@trade`
+      );
 
-    eventSource.onmessage = (event) => {
-      try {
+      ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        setPrices(data);
-      } catch (err) {
-        console.error('Error parsing SSE data:', err);
-      }
-    };
+        setPrices((prevPrices) => ({
+          ...prevPrices,
+          [data.s]: { symbol: data.s, price: parseFloat(data.p) },
+        }));
+      };
 
-    eventSource.onerror = () => {
-      console.error('SSE connection error. Closing connection.');
-      eventSource.close();
-    };
+      ws.onerror = (error) => {
+        console.error(`WebSocket error for ${coin.symbol}:`, error);
+      };
 
+      return ws;
+    });
+
+    // Cleanup WebSocket connections on component unmount
     return () => {
-      eventSource.close();
+      sockets.forEach((socket) => socket.close());
     };
   }, []);
 
@@ -59,7 +64,7 @@ const BinancePage = () => {
               <h2 className="text-lg font-bold truncate">{coin.name}</h2>
               <p className="text-xl font-semibold mt-2">
                 {prices[coin.symbol]?.price
-                  ? `$${parseFloat(prices[coin.symbol].price).toFixed(2)}`
+                  ? `$${prices[coin.symbol].price.toFixed(2)}`
                   : 'Loading...'}
               </p>
               <Link href={`/coin/${coin.symbol}`}>

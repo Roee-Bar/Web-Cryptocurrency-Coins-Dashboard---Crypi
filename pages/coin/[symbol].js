@@ -7,13 +7,15 @@ const CoinDetail = () => {
   const { symbol } = router.query;
 
   const [coinDetails, setCoinDetails] = useState(null);
-  const [livePrice, setLivePrice] = useState(null);
+  const [liveTradeData, setLiveTradeData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingSymbol, setLoadingSymbol] = useState(true);
 
-  // Fetch coin details (mock API for example purposes)
   useEffect(() => {
     if (symbol) {
+      setLoadingSymbol(false);
+
+      // Fetch coin details from the API
       const fetchCoinDetails = async () => {
         try {
           const res = await fetch(`/api/coin-details/${symbol}`);
@@ -25,35 +27,33 @@ const CoinDetail = () => {
           }
         } catch (err) {
           setError('Error fetching coin details');
-        } finally {
-          setLoading(false);
         }
       };
       fetchCoinDetails();
     }
   }, [symbol]);
 
-  // Establish SSE connection for live price updates
   useEffect(() => {
     if (symbol) {
-      const sse = new EventSource('/api/binance');
+      const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`);
 
-      sse.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        const priceData = data[symbol.toUpperCase()]; // Convert symbol to uppercase to match API format
-        if (priceData) {
-          setLivePrice(priceData.price);
-        }
+      ws.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        console.log('Received trade data:', message); // Debug log for WebSocket messages
+        setLiveTradeData({
+          price: message.p, // Trade price
+          quantity: message.q, // Trade quantity
+          time: new Date(message.T).toLocaleTimeString(), // Trade time
+        });
       };
 
-      sse.onerror = (err) => {
-        console.error('SSE error:', err);
-        setError('Error fetching live prices');
-        sse.close();
+      ws.onerror = (err) => {
+        console.error('WebSocket error:', err);
+        setError('Error fetching live trade data');
       };
 
       return () => {
-        sse.close();
+        ws.close(); // Clean up WebSocket on unmount
       };
     }
   }, [symbol]);
@@ -66,18 +66,23 @@ const CoinDetail = () => {
       </Link>
 
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        {coinDetails?.name || (loading ? 'Loading...' : symbol?.toUpperCase())} Coin Details
+        {coinDetails?.name || (!loadingSymbol ? symbol?.toUpperCase() : 'Loading...')} Coin Details
       </h1>
 
-      {livePrice && (
-        <p className="text-2xl font-semibold text-green-600 mb-6">
-          Live Price: ${parseFloat(livePrice).toFixed(2)}
-        </p>
+      {liveTradeData ? (
+        <div className="text-center mb-6">
+          <p className="text-2xl font-semibold text-green-600">
+            Live Price: ${parseFloat(liveTradeData.price).toFixed(2)}
+          </p>
+          <p className="text-md text-gray-600">
+            Quantity: {liveTradeData.quantity}, Time: {liveTradeData.time}
+          </p>
+        </div>
+      ) : (
+        <p className="text-gray-500 text-lg">Fetching live trade data...</p>
       )}
 
-      {loading ? (
-        <p className="text-gray-500 text-lg">Loading coin details...</p>
-      ) : coinDetails ? (
+      {coinDetails ? (
         <div className="bg-white rounded-lg shadow-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-2xl">
           <div className="mb-6 text-center">
             <img
@@ -92,7 +97,7 @@ const CoinDetail = () => {
           <p className="text-md text-gray-500">{coinDetails?.additionalInfo || 'No additional info available.'}</p>
         </div>
       ) : (
-        <p className="text-red-500 text-lg">Error: {error || 'Unable to fetch coin details.'}</p>
+        <p className="text-gray-500 text-lg">Loading coin details...</p>
       )}
 
       {error && <p className="mt-4 text-red-500 text-lg">{error}</p>}
