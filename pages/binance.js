@@ -46,9 +46,6 @@ const BinancePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
-        Real-Time Crypto Price Dashboard
-      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-screen-lg w-full">
         {COINS.map((coin) => (
           <div

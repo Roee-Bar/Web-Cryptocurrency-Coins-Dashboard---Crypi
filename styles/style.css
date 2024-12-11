@@ -89,3 +89,22 @@ body {
 h1 {
     color: #333; /* Dark color for better contrast against the background */
 }
+
+/* Header Styles */
+.header {
+    background: linear-gradient(145deg, #06b6d4, #4b89d9); /* Gradient background */
+    color: white;
+    padding: 1rem 2rem; /* Padding for spacing */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Center the title */
+  }
+  
+  /* Title Styles */
+  .header-title {
+    font-size: 1.5rem; /* Large font size */
+    font-weight: bold; /* Bold text */
+    margin: 0; /* Remove default margin */
+  }
+  

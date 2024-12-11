@@ -1,21 +1,50 @@
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { 
+  ResponsiveContainer, 
+  ComposedChart, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  CartesianGrid, 
+  Bar 
+} from 'recharts';
+
+// Custom Hook for Debouncing
+const useDebouncedState = (initialValue, delay) => {
+  const [value, setValue] = useState(initialValue);
+
+  const setDebouncedValue = useCallback(
+    (newValue) => {
+      setTimeout(() => {
+        setValue(newValue);
+      }, delay);
+    },
+    [delay]
+  );
+
+  return [value, setDebouncedValue];
+};
 
 const CoinDetail = () => {
   const router = useRouter();
   const { symbol } = router.query;
 
   const [coinDetails, setCoinDetails] = useState(null);
-  const [liveTradeData, setLiveTradeData] = useState(null);
+  const [liveTradeData, setDebouncedTradeData] = useDebouncedState(null, 200); // Debounced live trade data
+  const [candlestickData, setCandlestickData] = useState([]);
+  const [historicalData, setHistoricalData] = useState([]);
   const [error, setError] = useState(null);
   const [loadingSymbol, setLoadingSymbol] = useState(true);
+  const [timeRange, setTimeRange] = useState('1d');
+
+  const timeRangeOptions = ['5y', '1y', '1m', '1d'];
 
   useEffect(() => {
     if (symbol) {
       setLoadingSymbol(false);
 
-      // Fetch coin details from the API
+      // Fetch coin details
       const fetchCoinDetails = async () => {
         try {
           const res = await fetch(`/api/coin-details/${symbol}`);
@@ -30,77 +59,238 @@ const CoinDetail = () => {
         }
       };
       fetchCoinDetails();
-    }
-  }, [symbol]);
 
-  useEffect(() => {
-    if (symbol) {
-      const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`);
+      // WebSocket for live trade data and candlestick
+      const symbolLower = symbol.toLowerCase();
+      const tradeWs = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@trade`);
+      const candlestickWs = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@kline_1m`);
 
-      ws.onmessage = (event) => {
+      // WebSocket trade data handler
+      tradeWs.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        console.log('Received trade data:', message); // Debug log for WebSocket messages
-        setLiveTradeData({
-          price: message.p, // Trade price
-          quantity: message.q, // Trade quantity
-          time: new Date(message.T).toLocaleTimeString(), // Trade time
+        setDebouncedTradeData({
+          price: message.p,
+          quantity: message.q,
+          time: new Date(message.T).toLocaleTimeString(),
         });
       };
 
-      ws.onerror = (err) => {
-        console.error('WebSocket error:', err);
+      // WebSocket candlestick data handler
+      candlestickWs.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        const candle = message.k;
+
+        const newCandlestick = {
+          time: new Date(candle.t).toLocaleTimeString(),
+          open: parseFloat(candle.o),
+          high: parseFloat(candle.h),
+          low: parseFloat(candle.l),
+          close: parseFloat(candle.c),
+          isPositive: parseFloat(candle.c) >= parseFloat(candle.o),
+        };
+
+        setCandlestickData((prevData) => {
+          // Prevent redundant updates
+          if (prevData[prevData.length - 1]?.time !== newCandlestick.time) {
+            const updatedData = [...prevData, newCandlestick];
+            return updatedData.slice(-20); // Keep only the last 20 candlesticks
+          }
+          return prevData;
+        });
+      };
+
+      // Error handlers
+      tradeWs.onerror = (err) => {
+        console.error('Trade WebSocket error:', err);
         setError('Error fetching live trade data');
       };
 
+      candlestickWs.onerror = (err) => {
+        console.error('Candlestick WebSocket error:', err);
+        setError('Error fetching candlestick data');
+      };
+
+      // Cleanup WebSocket on unmount or symbol change
       return () => {
-        ws.close(); // Clean up WebSocket on unmount
+        tradeWs.close();
+        candlestickWs.close();
       };
     }
   }, [symbol]);
 
+  // Fetch historical data based on time range
+  const fetchHistoricalData = async (range) => {
+    try {
+      const intervalMap = {
+        '5y': '1d',
+        '1y': '1d',
+        '1m': '1h',
+        '1d': '15m',
+      };
+      const limitMap = {
+        '5y': 2000,
+        '1y': 365,
+        '1m': 744,
+        '1d': 96,
+      };
+
+      const interval = intervalMap[range] || '1d';
+      const limit = limitMap[range] || 96;
+
+      const res = await fetch(`https://api.binance.com/api/v1/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        const formattedData = data.map(d => ({
+          time: new Date(d[0]).toLocaleTimeString(),
+          open: parseFloat(d[1]),
+          high: parseFloat(d[2]),
+          low: parseFloat(d[3]),
+          close: parseFloat(d[4]),
+        }));
+        setHistoricalData(formattedData);
+      } else {
+        setError('Error fetching historical data');
+      }
+    } catch (err) {
+      setError('Error fetching historical data');
+    }
+  };
+
+  // Load historical data once the component is mounted or when time range is changed
+  useEffect(() => {
+    if (symbol) {
+      fetchHistoricalData(timeRange);
+    }
+  }, [symbol, timeRange]);
+
+  // Custom Candlestick Component
+  const CandlestickBar = React.memo(({ x, y, width, height, fill, dataPoint }) => {
+    const isPositive = dataPoint.isPositive;
+    const bodyHeight = Math.abs(height);
+    const bodyY = isPositive ? y : y - bodyHeight;
+
+    return (
+      <g>
+        {/* Candle body */}
+        <rect
+          x={x}
+          y={bodyY}
+          width={width}
+          height={bodyHeight}
+          fill={isPositive ? 'green' : 'red'}
+          stroke={isPositive ? 'green' : 'red'}
+        />
+        {/* Wick */}
+        <line
+          x1={x + width / 2}
+          y1={y - (isPositive ? height : 0)}
+          x2={x + width / 2}
+          y2={y + (isPositive ? 0 : height)}
+          stroke={isPositive ? 'green' : 'red'}
+          strokeWidth={1}
+        />
+      </g>
+    );
+  });
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-4 py-8 flex flex-col items-center">
-      {/* Back Button */}
-      <Link href="/binance" className="mb-6 text-lg text-blue-600 hover:text-blue-800 underline">
-        ← Back to Binance
-      </Link>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-4 py-8">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mt-4">
+          {coinDetails?.name || (!loadingSymbol ? symbol?.toUpperCase() : 'Loading...')} Data
+        </h1>
+      </div>
 
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        {coinDetails?.name || (!loadingSymbol ? symbol?.toUpperCase() : 'Loading...')} Coin Details
-      </h1>
-
-      {liveTradeData ? (
-        <div className="text-center mb-6">
-          <p className="text-2xl font-semibold text-green-600">
-            Live Price: ${parseFloat(liveTradeData.price).toFixed(2)}
-          </p>
-          <p className="text-md text-gray-600">
-            Quantity: {liveTradeData.quantity}, Time: {liveTradeData.time}
-          </p>
+      {/* Main content */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Left Box - Coin Info */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          {liveTradeData ? (
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">{coinDetails.name}</h2>
+              <p className="text-2xl font-semibold text-green-600">
+                Live Price: ${parseFloat(liveTradeData.price).toFixed(2)}
+              </p>
+              <p className="text-lg text-gray-600">{coinDetails.symbol.toUpperCase()}</p>
+              <p className="text-lg text-gray-700 mb-4">{coinDetails.description}</p>
+              <p className="text-md text-gray-500">{coinDetails?.additionalInfo || 'No additional info available.'}</p>
+            </div>
+          ) : (
+            <p className="text-gray-500 text-lg">Fetching live trade data...</p>
+          )}
         </div>
-      ) : (
-        <p className="text-gray-500 text-lg">Fetching live trade data...</p>
-      )}
 
-      {coinDetails ? (
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-2xl">
-          <div className="mb-6 text-center">
-            <img
-              src={coinDetails.image}
-              alt={coinDetails.name}
-              className="w-24 h-24 object-cover rounded-full mx-auto mb-4 border-4 border-white"
-            />
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">{coinDetails.name}</h2>
-            <p className="text-lg text-gray-600">{coinDetails.symbol.toUpperCase()}</p>
+        {/* Middle Box - Live Graph */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="text-center mb-6">Live Candlestick Chart</div>
+          <ResponsiveContainer width="100%" height={400}>
+            <ComposedChart data={candlestickData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis domain={['auto', 'auto']} label={{ value: 'Price', angle: -90, position: 'insideLeft' }} />
+              <Tooltip content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload;
+                  return (
+                    <div className="bg-white p-4 border rounded shadow-lg">
+                      <p>Time: {data.time}</p>
+                      <p>Open: ${data.open.toFixed(2)}</p>
+                      <p>High: ${data.high.toFixed(2)}</p>
+                      <p>Low: ${data.low.toFixed(2)}</p>
+                      <p>Close: ${data.close.toFixed(2)}</p>
+                    </div>
+                  );
+                }
+                return null;
+              }} />
+              <Bar dataKey="close" fill="#8884d8" shape={(props) => <CandlestickBar {...props} dataPoint={props.payload} />} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Right Box - Dropdown and Historical Graph */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="mb-6">
+            <select
+              className="p-2 border rounded w-full"
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+            >
+              {timeRangeOptions.map((range) => (
+                <option key={range} value={range}>
+                  {range === '5y' ? '5 Years' : range === '1y' ? '1 Year' : range === '1m' ? '1 Month' : '1 Day'}
+                </option>
+              ))}
+            </select>
           </div>
-          <p className="text-lg text-gray-700 mb-4">{coinDetails.description}</p>
-          <p className="text-md text-gray-500">{coinDetails?.additionalInfo || 'No additional info available.'}</p>
+          <div className="text-center mb-6">Historical Candlestick Chart</div>
+          <ResponsiveContainer width="100%" height={400}>
+            <ComposedChart data={historicalData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis domain={['auto', 'auto']} label={{ value: 'Price', angle: -90, position: 'insideLeft' }} />
+              <Tooltip content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload;
+                  return (
+                    <div className="bg-white p-4 border rounded shadow-lg">
+                      <p>Time: {data.time}</p>
+                      <p>Open: ${data.open.toFixed(2)}</p>
+                      <p>High: ${data.high.toFixed(2)}</p>
+                      <p>Low: ${data.low.toFixed(2)}</p>
+                      <p>Close: ${data.close.toFixed(2)}</p>
+                    </div>
+                  );
+                }
+                return null;
+              }} />
+              <Bar dataKey="close" fill="#8884d8" />
+            </ComposedChart>
+          </ResponsiveContainer>
         </div>
-      ) : (
-        <p className="text-gray-500 text-lg">Loading coin details...</p>
-      )}
-
-      {error && <p className="mt-4 text-red-500 text-lg">{error}</p>}
+      </div>
     </div>
   );
 };
