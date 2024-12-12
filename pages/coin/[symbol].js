@@ -213,7 +213,6 @@ const CoinDetail = () => {
             </p>
             <p className="text-lg text-gray-600 dark:text-gray-300">{coinDetails.symbol.toUpperCase()}</p>
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">{coinDetails.description}</p>
-            <p className="text-md text-gray-500 dark:text-gray-400">{coinDetails?.additionalInfo || 'No additional info available.'}</p>
           </div>
         ) : (
           <p className="text-gray-500 dark:text-gray-400 text-lg">Fetching live trade data...</p>
