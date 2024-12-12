@@ -29,12 +29,13 @@ export default function Header() {
 
   return (
     <header className="header bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md p-4 flex justify-between items-center">
-      {/* Back Button */}
-      <Link
-        href="/binance"
-        className="back-btn bg-white text-black dark:bg-black dark:text-white px-4 py-2 rounded-md shadow hover:bg-gray-200 dark:hover:bg-gray-700 transition mr-4"
-      >
-        ← Dashboard
+      {/* Home Button */}
+      <Link href="/binance" className="home-btn">
+        <img 
+          src="/images/home.png" 
+          alt="Home" 
+          className="w-8 h-8 bg-white rounded-md shadow hover:shadow-lg transition dark:bg-black dark:hover:bg-gray-700"
+        />
       </Link>
       <h1 className="header-title text-lg font-bold flex-1 text-center">
         Real-Time Crypto Prices

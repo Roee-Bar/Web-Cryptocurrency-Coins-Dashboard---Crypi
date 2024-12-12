@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'; 
-import { useTheme } from '@/context/ThemeContext';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { 
   ResponsiveContainer, 
@@ -28,7 +27,6 @@ const useDebouncedState = (initialValue, delay) => {
 };
 
 const CoinDetail = () => {
-  const { isDarkMode } = useTheme();
   const router = useRouter();
   const { symbol } = router.query;
 
@@ -222,11 +220,34 @@ const CoinDetail = () => {
         )}
       </div>
 
-      {/* Middle Box */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-        <div className="text-center mb-6 dark:text-white">Live Candlestick Chart</div>
-        {/* ... rest of your chart component */}
-      </div>
+
+        {/* Middle Box - Live Graph */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+          <div className="text-center mb-6 dark:text-white">Live Candlestick Chart</div>
+          <ResponsiveContainer width="100%" height={400}>
+            <ComposedChart data={candlestickData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis domain={['auto', 'auto']} label={{ value: 'Price', angle: -90, position: 'insideLeft' }} />
+              <Tooltip content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload;
+                  return (
+                    <div className="bg-white p-4 border rounded shadow-lg">
+                      <p>Time: {data.time}</p>
+                      <p>Open: ${data.open.toFixed(2)}</p>
+                      <p>High: ${data.high.toFixed(2)}</p>
+                      <p>Low: ${data.low.toFixed(2)}</p>
+                      <p>Close: ${data.close.toFixed(2)}</p>
+                    </div>
+                  );
+                }
+                return null;
+              }} />
+              <Bar dataKey="close" fill="#8884d8" shape={(props) => <CandlestickBar {...props} dataPoint={props.payload} />} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
 
       {/* Right Box */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -242,13 +263,35 @@ const CoinDetail = () => {
               </option>
             ))}
           </select>
-        </div>
+          </div>
         <div className="text-center mb-6 dark:text-white">Historical Candlestick Chart</div>
-        {/* ... rest of your chart component */}
+          <ResponsiveContainer width="100%" height={400}>
+            <ComposedChart data={historicalData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis domain={['auto', 'auto']} label={{ value: 'Price', angle: -90, position: 'insideLeft' }} />
+              <Tooltip content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload;
+                  return (
+                    <div className="bg-white p-4 border rounded shadow-lg">
+                      <p>Time: {data.time}</p>
+                      <p>Open: ${data.open.toFixed(2)}</p>
+                      <p>High: ${data.high.toFixed(2)}</p>
+                      <p>Low: ${data.low.toFixed(2)}</p>
+                      <p>Close: ${data.close.toFixed(2)}</p>
+                    </div>
+                  );
+                }
+                return null;
+              }} />
+              <Bar dataKey="close" fill="#8884d8" />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default CoinDetail;
