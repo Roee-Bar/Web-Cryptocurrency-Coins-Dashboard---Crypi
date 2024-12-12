@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; 
+import { useTheme } from '@/context/ThemeContext';
 import { useRouter } from 'next/router';
 import { 
   ResponsiveContainer, 
@@ -27,6 +28,7 @@ const useDebouncedState = (initialValue, delay) => {
 };
 
 const CoinDetail = () => {
+  const { isDarkMode } = useTheme();
   const router = useRouter();
   const { symbol } = router.query;
 
@@ -195,104 +197,58 @@ const CoinDetail = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-4 py-8">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mt-4">
-          {coinDetails?.name || (!loadingSymbol ? symbol?.toUpperCase() : 'Loading...')} Data
-        </h1>
+    <div className="min-h-screen bg-white dark:bg-gray-900 px-4 py-8 transition-colors duration-200">
+    <div className="mb-6">
+      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mt-4">
+        {coinDetails?.name || (!loadingSymbol ? symbol?.toUpperCase() : 'Loading...')} Data
+      </h1>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Left Box */}
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        {liveTradeData ? (
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{coinDetails.name}</h2>
+            <p className="text-2xl font-semibold text-green-600 dark:text-green-400">
+              Live Price: ${parseFloat(liveTradeData.price).toFixed(2)}
+            </p>
+            <p className="text-lg text-gray-600 dark:text-gray-300">{coinDetails.symbol.toUpperCase()}</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">{coinDetails.description}</p>
+            <p className="text-md text-gray-500 dark:text-gray-400">{coinDetails?.additionalInfo || 'No additional info available.'}</p>
+          </div>
+        ) : (
+          <p className="text-gray-500 dark:text-gray-400 text-lg">Fetching live trade data...</p>
+        )}
       </div>
 
-      {/* Main content */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left Box - Coin Info */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          {liveTradeData ? (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">{coinDetails.name}</h2>
-              <p className="text-2xl font-semibold text-green-600">
-                Live Price: ${parseFloat(liveTradeData.price).toFixed(2)}
-              </p>
-              <p className="text-lg text-gray-600">{coinDetails.symbol.toUpperCase()}</p>
-              <p className="text-lg text-gray-700 mb-4">{coinDetails.description}</p>
-              <p className="text-md text-gray-500">{coinDetails?.additionalInfo || 'No additional info available.'}</p>
-            </div>
-          ) : (
-            <p className="text-gray-500 text-lg">Fetching live trade data...</p>
-          )}
-        </div>
+      {/* Middle Box */}
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <div className="text-center mb-6 dark:text-white">Live Candlestick Chart</div>
+        {/* ... rest of your chart component */}
+      </div>
 
-        {/* Middle Box - Live Graph */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <div className="text-center mb-6">Live Candlestick Chart</div>
-          <ResponsiveContainer width="100%" height={400}>
-            <ComposedChart data={candlestickData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={['auto', 'auto']} label={{ value: 'Price', angle: -90, position: 'insideLeft' }} />
-              <Tooltip content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload;
-                  return (
-                    <div className="bg-white p-4 border rounded shadow-lg">
-                      <p>Time: {data.time}</p>
-                      <p>Open: ${data.open.toFixed(2)}</p>
-                      <p>High: ${data.high.toFixed(2)}</p>
-                      <p>Low: ${data.low.toFixed(2)}</p>
-                      <p>Close: ${data.close.toFixed(2)}</p>
-                    </div>
-                  );
-                }
-                return null;
-              }} />
-              <Bar dataKey="close" fill="#8884d8" shape={(props) => <CandlestickBar {...props} dataPoint={props.payload} />} />
-            </ComposedChart>
-          </ResponsiveContainer>
+      {/* Right Box */}
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <div className="mb-6">
+          <select
+            className="p-2 border rounded w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+            value={timeRange}
+            onChange={(e) => setTimeRange(e.target.value)}
+          >
+            {timeRangeOptions.map((range) => (
+              <option key={range} value={range}>
+                {range === '5y' ? '5 Years' : range === '1y' ? '1 Year' : range === '1m' ? '1 Month' : '1 Day'}
+              </option>
+            ))}
+          </select>
         </div>
-
-        {/* Right Box - Dropdown and Historical Graph */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <div className="mb-6">
-            <select
-              className="p-2 border rounded w-full"
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-            >
-              {timeRangeOptions.map((range) => (
-                <option key={range} value={range}>
-                  {range === '5y' ? '5 Years' : range === '1y' ? '1 Year' : range === '1m' ? '1 Month' : '1 Day'}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="text-center mb-6">Historical Candlestick Chart</div>
-          <ResponsiveContainer width="100%" height={400}>
-            <ComposedChart data={historicalData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={['auto', 'auto']} label={{ value: 'Price', angle: -90, position: 'insideLeft' }} />
-              <Tooltip content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload;
-                  return (
-                    <div className="bg-white p-4 border rounded shadow-lg">
-                      <p>Time: {data.time}</p>
-                      <p>Open: ${data.open.toFixed(2)}</p>
-                      <p>High: ${data.high.toFixed(2)}</p>
-                      <p>Low: ${data.low.toFixed(2)}</p>
-                      <p>Close: ${data.close.toFixed(2)}</p>
-                    </div>
-                  );
-                }
-                return null;
-              }} />
-              <Bar dataKey="close" fill="#8884d8" />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
+        <div className="text-center mb-6 dark:text-white">Historical Candlestick Chart</div>
+        {/* ... rest of your chart component */}
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default CoinDetail;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
+import { useTheme } from '../context/ThemeContext';
 const COINS = [
   { symbol: 'BTCUSDT', name: 'Bitcoin', image: '/images/bitcoin.png' },
   { symbol: 'ETHUSDT', name: 'Ethereum', image: '/images/ethereum.webp' },
@@ -16,6 +16,7 @@ const COINS = [
 
 const BinancePage = () => {
   const [prices, setPrices] = useState({});
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     const sockets = COINS.map((coin) => {
@@ -45,12 +46,12 @@ const BinancePage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 transition-colors duration-200 px-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-screen-lg w-full">
         {COINS.map((coin) => (
           <div
             key={coin.symbol}
-            className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
+            className="bg-gradient-to-br from-cyan-500 to-blue-500 dark:from-blue-600 dark:to-blue-800 text-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
           >
             <img
               src={coin.image}
