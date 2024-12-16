@@ -65,7 +65,7 @@ const Dashboard = () => {
                   ? `$${prices[coin.symbol].price.toFixed(2)}`
                   : 'Loading...'}
               </p>
-              <Link href={`/coin/${coin.symbol}`}>
+              <Link href={`/${coin.symbol}`}>
                 <div className="mt-4 text-sm font-medium text-white underline hover:text-gray-200 cursor-pointer">
                   View Details
                 </div>

@@ -8,8 +8,8 @@ export default function About() {
         {/* Main content */}
         <div className="relative z-10 text-center px-6">
           {/* About Us Heading */}
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">
-            About <span className="text-cyan-400">Us</span>
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg text-cyan-400">
+            About Us
           </h1>
   
           <p className="text-lg md:text-xl font-light text-gray-300 mb-8 max-w-2xl mx-auto">

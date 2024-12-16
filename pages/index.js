@@ -10,8 +10,8 @@ export default function Home() {
       {/* Main content */}
       <div className="relative z-10 text-center px-6">
         {/* Crypto-themed heading */}
-        <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">
-          Welcome to <span className="text-cyan-400">Crypi</span>
+        <h1 className="text-cyan-400 text-5xl md:text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">
+          Welcome to Crypi
         </h1>
         <p className="text-lg md:text-xl font-light text-gray-300 mb-8 max-w-2xl mx-auto">
           Explore live cryptocurrency prices, market trends, and more. Empowering your crypto journey.

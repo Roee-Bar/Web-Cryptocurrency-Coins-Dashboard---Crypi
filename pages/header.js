@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { IoHomeSharp } from "react-icons/io5";
+
 
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -30,15 +32,11 @@ export default function Header() {
   return (
     <header className="header bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md p-4 flex justify-between items-center">
       {/* Home Button */}
-      <Link href="/" className="home-btn">
-        <img 
-          src="/images/home.png" 
-          alt="Home" 
-          className="w-8 h-8 bg-white rounded-md shadow hover:shadow-lg transition dark:bg-black dark:hover:bg-gray-700"
-        />
+      <Link href="/">
+          <IoHomeSharp size={32}/>
       </Link>
       <h1 className="header-title text-lg font-bold flex-1 text-center">
-        Real-Time Crypto Prices
+      <Link href="/dashboard">Real-Time Crypto Prices</Link>
       </h1>
       <button
         onClick={toggleDarkMode}
