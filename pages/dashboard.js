@@ -14,7 +14,7 @@ const COINS = [
   { symbol: 'DOTUSDT', name: 'Polkadot', image: '/images/polkadot.png' },
 ];
 
-const BinancePage = () => {
+const Dashboard = () => {
   const [prices, setPrices] = useState({});
   const { isDarkMode } = useTheme();
 
@@ -78,4 +78,4 @@ const BinancePage = () => {
   );
 };
 
-export default BinancePage;
+export default Dashboard;

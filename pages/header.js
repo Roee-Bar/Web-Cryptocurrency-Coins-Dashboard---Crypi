@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <header className="header bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md p-4 flex justify-between items-center">
       {/* Home Button */}
-      <Link href="/binance" className="home-btn">
+      <Link href="/" className="home-btn">
         <img 
           src="/images/home.png" 
           alt="Home" 
