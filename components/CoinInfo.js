@@ -22,7 +22,7 @@ const CoinInfo = ({ symbol }) => {
       fetchCoinDetails();
     }
   }, [symbol]);
-
+//
   return (
     <div className="text-center">
       {coinDetails ? (

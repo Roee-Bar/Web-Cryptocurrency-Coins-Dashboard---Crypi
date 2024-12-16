@@ -24,7 +24,7 @@ const LiveGraph = ({ symbol }) => {
           close: parseFloat(candle.c),
           isPositive: parseFloat(candle.c) >= parseFloat(candle.o),
         };
-
+//
         setCandlestickData((prevData) => {
           if (prevData[prevData.length - 1]?.time !== newCandlestick.time) {
             return [...prevData, newCandlestick].slice(-20); // Keep last 20 data points

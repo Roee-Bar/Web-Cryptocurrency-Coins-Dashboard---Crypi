@@ -26,7 +26,7 @@ const LivePrice = ({ symbol }) => {
         console.error('WebSocket error:', err);
         setError('Error fetching live price data');
       };
-
+//
       socket.onclose = () => {
         console.log(`Disconnected from Binance WebSocket for ${symbol}`);
       };

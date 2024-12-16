@@ -19,7 +19,7 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
             `https://api.binance.com/api/v1/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`
           );
           const data = await res.json();
-
+//
           if (res.ok) {
             const formattedData = data.map((d) => ({
               time: new Date(d[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
