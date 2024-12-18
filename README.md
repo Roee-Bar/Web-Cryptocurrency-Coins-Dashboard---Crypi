@@ -1,5 +1,7 @@
 Crypto Currency Dashboard Project - Crypi
 
+https://cryptoproject-jub8.vercel.app/
+
 This project is a full-stack web application developed as part of an academic course in software engineering. The primary purpose of the application is to show real time prices and data about crypto currency.
 
 Description
