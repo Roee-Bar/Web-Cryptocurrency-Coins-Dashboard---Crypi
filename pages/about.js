@@ -64,7 +64,7 @@ export default function About() {
           ))}
         </div>
         {/* Buttons */}
-        <div className="flex flex-col md:flex-row gap-4 justify-center">
+        <div className="flex flex-col md:flex-row gap-4 justify-center mt-8">
           <Link href="/dashboard" legacyBehavior>
             <a className="bg-cyan-500 hover:bg-cyan-600 text-white py-3 px-6 rounded-lg shadow-lg text-lg transition">
               Go to Dashboard
