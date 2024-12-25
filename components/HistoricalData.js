@@ -57,7 +57,19 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" />
           <YAxis domain={['auto', 'auto']} />
-          <Tooltip />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: '#1E293B', // צבע רקע כהה
+              borderRadius: '8px', // פינות מעוגלות
+              border: '1px solid #334155', // מסגרת בצבע כהה יותר
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', // צל
+              color: '#F1F5F9', // טקסט לבן
+            }}
+            labelStyle={{
+              color: '#94A3B8', // צבע כותרת בהיר יותר
+              fontWeight: 'bold', // טקסט מודגש
+            }}
+          />
           <Bar
             dataKey="close"
             fill="#8884d8"
