@@ -59,15 +59,15 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
           <YAxis domain={['auto', 'auto']} />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1E293B', // צבע רקע כהה
-              borderRadius: '8px', // פינות מעוגלות
-              border: '1px solid #334155', // מסגרת בצבע כהה יותר
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', // צל
-              color: '#F1F5F9', // טקסט לבן
+              backgroundColor: '#1E293B',
+              borderRadius: '8px',
+              border: '1px solid #334155',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+              color: '#F1F5F9',
             }}
             labelStyle={{
-              color: '#94A3B8', // צבע כותרת בהיר יותר
-              fontWeight: 'bold', // טקסט מודגש
+              color: '#94A3B8',
+              fontWeight: 'bold',
             }}
           />
           <Bar
