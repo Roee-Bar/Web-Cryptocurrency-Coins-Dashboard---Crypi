@@ -18,17 +18,7 @@ const CoinDetail = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-12 transition-colors duration-200">
       <div className="mb-8 text-center">
         <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white">
-        {symbol ? (
-      <div className="mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white">
-          {symbol.toUpperCase()} Data
-        </h1>
-      </div>
-    ) : (
-      <p className="text-center text-gray-600 dark:text-gray-400">
-        Loading symbol data...
-      </p>
-    )} Data
+          {symbol?.toUpperCase()} Data
         </h1>
       </div>
 

@@ -60,7 +60,13 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
   return (
     <>
       <h2 className="text-center text-lg font-bold mb-4">
-        {symbol.toUpperCase()} - Historical Data ({timeRange})
+      {symbol ? (
+        <h2 className="text-center text-lg font-bold mb-4">
+          {symbol.toUpperCase()} - Historical Data ({timeRange})
+        </h2>
+      ) : (
+        <p className="text-center">Loading symbol data...</p>
+      )}
       </h2>
       <ResponsiveContainer width="100%" height={400}>
         <ComposedChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
