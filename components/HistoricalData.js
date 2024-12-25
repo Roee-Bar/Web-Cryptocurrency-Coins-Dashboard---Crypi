@@ -21,13 +21,20 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
           const data = await res.json();
 //
           if (res.ok) {
-            const formattedData = data.map((d) => ({
-              time: new Date(d[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              open: parseFloat(d[1]),
-              high: parseFloat(d[2]),
-              low: parseFloat(d[3]),
-              close: parseFloat(d[4]),
-            }));
+            const formattedData = data.map((d) => {
+              const date = new Date(d[0]);
+              const formatOptions = timeRange === '1d' ? { hour: '2-digit', minute: '2-digit' } :
+                                    timeRange === '1m' ? { month: 'short', day: 'numeric' } :
+                                    { year: 'numeric', month: 'short' };
+              return {
+                time: date.toLocaleDateString([], formatOptions),
+                open: parseFloat(d[1]),
+                high: parseFloat(d[2]),
+                low: parseFloat(d[3]),
+                close: parseFloat(d[4]),
+              };
+            });
+            
             setHistoricalData(formattedData);
           } else {
             setError('Error fetching historical data');
