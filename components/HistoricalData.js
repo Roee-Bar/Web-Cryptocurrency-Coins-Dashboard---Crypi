@@ -14,21 +14,11 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
 
           const interval = intervalMap[timeRange] || '1d';
           const limit = limitMap[timeRange] || 96;
-
-          try {
-            if (!symbol || !interval || !limit) {
-              throw new Error("Missing required parameters");
-            }
           
-            const res = await fetch(
-              `https://api.binance.com/api/v1/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`
-            );
-            
-            const data = await res.json();
-            console.log(data);
-          } catch (error) {
-            console.error("Error fetching Binance data:", error.message);
-          }
+          const res = await fetch(
+            `https://api.binance.com/api/v1/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`
+          );
+          const data = await res.json();
 
           if (res.ok) {
             const formattedData = data.map((d) => {
@@ -60,13 +50,8 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
   return (
     <>
       <h2 className="text-center text-lg font-bold mb-4">
-      {symbol ? (
-        <h2 className="text-center text-lg font-bold mb-4">
-          {symbol.toUpperCase()} - Historical Data ({timeRange})
-        </h2>
-      ) : (
-        <p className="text-center">Loading symbol data...</p>
-      )}
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Historical Data({timeRange})</h3>
+      
       </h2>
       <ResponsiveContainer width="100%" height={400}>
         <ComposedChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
