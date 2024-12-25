@@ -15,10 +15,20 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
           const interval = intervalMap[timeRange] || '1d';
           const limit = limitMap[timeRange] || 96;
 
-          const res = await fetch(
-            `https://api.binance.com/api/v1/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`
-          );
-          const data = await res.json();
+          try {
+            if (!symbol || !interval || !limit) {
+              throw new Error("Missing required parameters");
+            }
+          
+            const res = await fetch(
+              `https://api.binance.com/api/v1/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=${limit}`
+            );
+            
+            const data = await res.json();
+            console.log(data);
+          } catch (error) {
+            console.error("Error fetching Binance data:", error.message);
+          }
 
           if (res.ok) {
             const formattedData = data.map((d) => {
