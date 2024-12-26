@@ -17,9 +17,9 @@ try:
 
     # Example data to insert
     coin_data = {
-        "symbol": "DOTUSDT",
-        "name": "Polkadot",
-        "description": "Polkadot is a next-generation blockchain platform that enables interoperability between different blockchains. Its unique architecture allows multiple blockchains to transfer messages and transactions seamlessly. DOT, its native cryptocurrency, is used for governance, staking, and bonding.",
+        "symbol": "SYMBOL HERE",
+        "name": "NAME HERE",
+        "description": "DESCRIPTION HERE",
     }
 
     # Insert the document

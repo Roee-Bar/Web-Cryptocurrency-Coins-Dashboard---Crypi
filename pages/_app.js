@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import '../styles/style.css';
-import Header from './header';
+import Header from '/components/header';
 import { ThemeProvider } from '@/context/ThemeContext';  // Note the @ symbol
 import { useRouter } from 'next/router';
 
