@@ -28,11 +28,7 @@ const LiveGraph = ({ symbol }) => {
 
         setCandlestickData((prevData) => {
           if (prevData[prevData.length - 1]?.time !== newCandlestick.time) {
-            return [
-              ...prevData,
-              { ...newCandlestick, isOpenBar: true }, // Add the open bar
-              { ...newCandlestick, isOpenBar: false }, // Add the close bar
-            ].slice(-40); // Keep last 40 data points (20 minutes)
+            return [...prevData, newCandlestick].slice(-20); // Keep last 20 data points (20 minutes)
           }
           return prevData;
         });
