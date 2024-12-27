@@ -95,9 +95,10 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
       </div>
 
       {/* Historical Data Header */}
-      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 text-center">
         Historical Data ({timeRange})
       </h3>
+
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={400}>
