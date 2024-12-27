@@ -16,6 +16,7 @@ const LiveGraph = ({ symbol }) => {
       candlestickWs.onmessage = (event) => {
         const message = JSON.parse(event.data);
         const candle = message.k;
+
         const newCandlestick = {
           time: new Date(candle.t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           open: parseFloat(candle.o),
@@ -24,10 +25,14 @@ const LiveGraph = ({ symbol }) => {
           close: parseFloat(candle.c),
           isPositive: parseFloat(candle.c) >= parseFloat(candle.o),
         };
-//
+
         setCandlestickData((prevData) => {
           if (prevData[prevData.length - 1]?.time !== newCandlestick.time) {
-            return [...prevData, newCandlestick].slice(-20); // Keep last 20 data points
+            return [
+              ...prevData,
+              { ...newCandlestick, isOpenBar: true }, // Add the open bar
+              { ...newCandlestick, isOpenBar: false }, // Add the close bar
+            ].slice(-40); // Keep last 40 data points (20 minutes)
           }
           return prevData;
         });
@@ -53,7 +58,7 @@ const LiveGraph = ({ symbol }) => {
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Live Graph</h3>
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 text-center">Live Graph</h3>
       <ResponsiveContainer width="100%" height={400}>
         <ComposedChart data={candlestickData} margin={{ top: 20, right: 20, left: 20, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
@@ -64,20 +69,20 @@ const LiveGraph = ({ symbol }) => {
             contentStyle={{ backgroundColor: '#333', color: '#fff' }}
             cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
           />
-          <Bar
-            dataKey="close"
-            barSize={6} // Reduced the width of the candlesticks
-            fill="#8884d8"
-            radius={[2, 2, 0, 0]} // Rounded corners for a more modern look
-            strokeWidth={0}
-            isAnimationActive={false} // Disable animation for faster rendering
-          />
+          {/* Open Bar (Blue) */}
           <Bar
             dataKey="open"
-            barSize={6} // Same width as the close bar
-            fill="#ff4f4f"
+            barSize={6}
+            fill="#4A90E2" // Blue for open
             radius={[2, 2, 0, 0]}
-            strokeWidth={0}
+            isAnimationActive={false}
+          />
+          {/* Close Bar (Red) */}
+          <Bar
+            dataKey="close"
+            barSize={6}
+            fill="#F44336" // Red for close
+            radius={[2, 2, 0, 0]}
             isAnimationActive={false}
           />
         </ComposedChart>
