@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTheme } from '../context/ThemeContext';
+
 const COINS = [
   { symbol: 'BTCUSDT', name: 'Bitcoin', image: '/images/bitcoin.png' },
   { symbol: 'ETHUSDT', name: 'Ethereum', image: '/images/ethereum.webp' },
@@ -19,29 +20,29 @@ const Dashboard = () => {
   const { isDarkMode } = useTheme();
 
   useEffect(() => {
-    const sockets = COINS.map((coin) => {
-      const ws = new WebSocket(
-        `wss://stream.binance.com:9443/ws/${coin.symbol.toLowerCase()}@trade`
-      );
+    // Construct the combined stream URL
+    const streams = COINS.map((coin) => `${coin.symbol.toLowerCase()}@trade`).join('/');
+    const ws = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
 
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        setPrices((prevPrices) => ({
-          ...prevPrices,
-          [data.s]: { symbol: data.s, price: parseFloat(data.p) },
-        }));
-      };
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const symbol = data.data.s;
+      const price = parseFloat(data.data.p);
 
-      ws.onerror = (error) => {
-        console.error(`WebSocket error for ${coin.symbol}:`, error);
-      };
+      // Update the price state for the specific coin
+      setPrices((prevPrices) => ({
+        ...prevPrices,
+        [symbol]: { symbol, price },
+      }));
+    };
 
-      return ws;
-    });
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
 
-    // Cleanup WebSocket connections on component unmount
+    // Cleanup WebSocket connection on component unmount
     return () => {
-      sockets.forEach((socket) => socket.close());
+      ws.close();
     };
   }, []);
 
