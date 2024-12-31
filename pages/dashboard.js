@@ -52,14 +52,14 @@ const Dashboard = () => {
         {COINS.map((coin) => (
           <div
             key={coin.symbol}
-            className="bg-gradient-to-br from-cyan-500 to-blue-500 dark:from-blue-600 dark:to-blue-800 text-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
+            className="bg-gradient-to-br from-cyan-500 to-blue-500 dark:from-blue-600 dark:to-blue-800 text-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-center items-center"
           >
             <img
               src={coin.image}
               alt={coin.name}
               className="w-16 h-16 object-cover rounded-full border-2 border-white mb-4"
             />
-            <div>
+            <div className="text-center">
               <h2 className="text-lg font-bold truncate">{coin.name}</h2>
               <p className="text-xl font-semibold mt-2">
                 {prices[coin.symbol]?.price
