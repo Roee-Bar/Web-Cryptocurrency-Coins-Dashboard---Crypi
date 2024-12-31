@@ -33,7 +33,7 @@ export default function Header() {
     <header className="header bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md p-4 flex justify-between items-center">
       {/* Home Button */}
       <Link href="/">
-          <IoHomeSharp size={32}/>
+          <IoHomeSharp size={`${Math.min(window.innerWidth * 0.08, 32)}px`}/>
       </Link>
       <h1 className="header-title text-lg font-bold flex-1 text-center">
       <Link href="/dashboard">Real-Time Crypto Prices</Link>
