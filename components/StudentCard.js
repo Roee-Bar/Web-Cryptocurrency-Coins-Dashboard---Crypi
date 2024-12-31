@@ -1,20 +1,35 @@
 import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function StudentCard({ name, linkedin, image, workplace }) {
+  const { isDarkMode } = useTheme();
+  
   return (
-    <div className="bg-white text-black rounded-lg shadow-md p-4 w-64">
+    <div className={`p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 w-64
+      ${isDarkMode 
+        ? 'bg-gradient-to-br from-gray-700 to-gray-900'
+        : 'bg-gradient-to-br from-cyan-500 to-blue-500'}`}>
       <img
         src={image}
         alt={`${name}'s profile`}
-        className="w-24 h-24 rounded-full mx-auto mb-4"
+        className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-white"
       />
-      <h2 className="text-xl font-semibold text-center">{name}</h2>
-      <p className="text-center text-gray-600">{workplace}</p>
+      <h2 className={`text-xl font-semibold text-center mb-2
+        ${isDarkMode ? 'text-white' : 'text-black'}`}>
+        {name}
+      </h2>
+      <p className={`text-center text-sm mb-4
+        ${isDarkMode ? 'text-white' : 'text-black'}`}>
+        {workplace}
+      </p>
       <a
         href={linkedin}
         target="_blank"
         rel="noopener noreferrer"
-        className="block mt-4 text-center text-cyan-500 hover:underline"
+        className={`block text-center underline text-sm transition
+          ${isDarkMode 
+            ? 'text-white hover:text-gray-200' 
+            : 'text-gray-900 hover:text-gray-700'}`}
       >
         LinkedIn Profile
       </a>

@@ -1,48 +1,47 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { IoHomeSharp } from "react-icons/io5";
-
+import { IoHomeSharp, IoMoonSharp, IoSunnySharp } from "react-icons/io5";
+import { useTheme } from '../context/ThemeContext';
+import { useRouter } from 'next/router';
 
 export default function Header() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Check localStorage for user preference on initial load
-    const savedMode = localStorage.getItem('theme');
-    if (savedMode === 'dark') {
-      document.documentElement.classList.add('dark'); // Apply dark mode to the root element
-      setIsDarkMode(true);
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode((prev) => !prev);
-
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark'); // Enable dark mode
-      localStorage.setItem('theme', 'dark'); // Save preference to localStorage
-    } else {
-      document.documentElement.classList.remove('dark'); // Disable dark mode
-      localStorage.setItem('theme', 'light'); // Save preference to localStorage
-    }
-  };
+  const { isDarkMode, toggleDarkMode } = useTheme();
+  const router = useRouter();
 
   return (
-    <header className="header bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md p-4 flex justify-between items-center">
-      {/* Home Button */}
+    <header className={`header p-4 flex justify-between items-center shadow-md
+      ${isDarkMode 
+        ? 'bg-gradient-to-r from-gray-800 via-gray-900 to-black' 
+        : 'bg-gradient-to-r from-purple-800 via-blue-800 to-black'}`}>
       <Link href="/">
-          <IoHomeSharp size={32}/>
+        <IoHomeSharp size={32} className={isDarkMode ? 'text-white' : 'text-black'} />
       </Link>
-      <h1 className="header-title text-lg font-bold flex-1 text-center">
-      <Link href="/dashboard">Real-Time Crypto Prices</Link>
+      <h1 className={`header-title text-lg font-bold flex-1 text-center ${isDarkMode ? 'text-white' : 'text-black'}`}>
+        {router.pathname !== '/about' && (
+          <Link href="/dashboard">Real-Time Crypto Prices</Link>
+        )}
       </h1>
       <button
         onClick={toggleDarkMode}
-        className="dark-mode-toggle bg-white text-black dark:bg-black dark:text-white px-4 py-2 rounded-md shadow hover:shadow-lg transition"
+        className={`relative flex items-center w-24 h-12 rounded-full p-1 transition-colors duration-300 ease-in-out
+          ${isDarkMode 
+            ? 'bg-gradient-to-r from-gray-800 via-gray-900 to-black' 
+            : 'bg-gradient-to-r from-blue-200 via-blue-800 to-pink-300'
+          }`}
       >
-        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+        <div
+          className={`relative z-10 w-10 h-10 rounded-full transform transition-transform duration-300 ease-in-out flex items-center justify-center
+            ${isDarkMode 
+              ? 'translate-x-12 bg-gray-700' 
+              : 'translate-x-0 bg-white'
+            }`}
+        >
+          {isDarkMode ? (
+            <IoMoonSharp className="w-6 h-6 text-white" />
+          ) : (
+            <IoSunnySharp className="w-6 h-6 text-yellow-500" />
+          )}
+        </div>
       </button>
     </header>
   );
