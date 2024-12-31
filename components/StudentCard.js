@@ -2,13 +2,15 @@ import React from 'react';
 
 export default function StudentCard({ name, linkedin, image, workplace }) {
   return (
-    <div className="bg-white text-black rounded-lg shadow-md p-4 w-64">
+    <div className="bg-white text-black rounded-lg shadow-md p-4 w-64 flex flex-col justify-between">
+      <div className="flex flex-col items-center">
       <img
         src={image}
         alt={`${name}'s profile`}
         className="w-24 h-24 rounded-full mx-auto mb-4"
       />
       <h2 className="text-xl font-semibold text-center">{name}</h2>
+      </div>
       <p className="text-center text-gray-600">{workplace}</p>
       <a
         href={linkedin}
