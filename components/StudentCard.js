@@ -12,6 +12,7 @@ export default function StudentCard({ name, linkedin, image, workplace }) {
       <h2 className="text-xl font-semibold text-center">{name}</h2>
       </div>
       <p className="text-center text-gray-600">{workplace}</p>
+      
       <a
         href={linkedin}
         target="_blank"
