@@ -59,7 +59,7 @@ const Dashboard = () => {
         {COINS.map((coin) => (
           <div
             key={coin.symbol}
-            className={`p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300
+            className={`p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 flex flex-col items-center justify-center
               ${isDarkMode 
                 ? 'bg-gradient-to-br from-gray-700 to-gray-900'
                 : 'bg-gradient-to-br from-cyan-500 to-blue-500'}`}

@@ -23,7 +23,7 @@ export default function About() {
       name: 'Roee Bar',
       linkedin: 'https://www.linkedin.com/in/roee-bar/',
       image: 'https://media.licdn.com/dms/image/v2/D4D03AQHeqUBj-3T3aA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1681210351276?e=1740009600&v=beta&t=jXsQLg7Rw9z8xO9QDynWK3C-tvLnfLQR-RTAOTCwhbI',
-      workplace: 'Software Engineer | Technion Venture Capital Club',
+      workplace: 'Software Engineer | Elbit Systems | Technion Venture Capital Club | Google Developers Group Haifa',
     },
     {
       name: 'Eldar Gafarov',
