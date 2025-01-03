@@ -8,9 +8,19 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+      keyframes: {
+        twinkle: {
+          '0%, 100%': { opacity: 0.2 },
+          '50%': { opacity: 1 },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(10px)' },
+        }
+      },
+      animation: {
+        twinkle: 'twinkle 2s ease-in-out infinite',
+        float: 'float 3s ease-in-out infinite',
       },
     },
   },

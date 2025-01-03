@@ -1,12 +1,26 @@
 // pages/index.js
 import Link from 'next/link';
+import { useTheme } from '../context/ThemeContext';
 
-export default function Home() {
+export default function Home() 
+{
+  const { isDarkMode, toggleDarkMode } = useTheme();
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-purple-800 via-blue-800 to-black text-white">
+    <div className={`min-h-screen flex flex-col justify-center items-center 
+      ${isDarkMode 
+        ? 'bg-gradient-to-r from-gray-800 via-gray-900 to-black'
+        : 'bg-gradient-to-r from-purple-800 via-blue-800 to-black'} 
+      text-white relative`}>
       {/* Background with overlay */}
       <div className="absolute inset-0 bg-opacity-60 bg-gradient-to-br from-black via-transparent to-black pointer-events-none"></div>
-
+      {/* Dark mode Button, to check how i works. */}
+      <button
+        onClick={toggleDarkMode}
+        className="absolute top-4 right-4 bg-white text-black dark:bg-gray-800 dark:text-white 
+          px-4 py-2 rounded-md shadow hover:shadow-lg transition z-20"
+      >
+        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
       {/* Main content */}
       <div className="relative z-10 text-center px-6">
         {/* Crypto-themed heading */}
