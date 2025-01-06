@@ -53,8 +53,10 @@ const LiveGraph = ({ symbol }) => {
   }, [symbol]); // Only re-run when the symbol changes
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 text-center">Live Graph</h3>
+    <div className="w-full h-full flex flex-col">
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 text-center">
+        Live Graph
+      </h3>
       <ResponsiveContainer width="100%" height={400}>
         <ComposedChart data={candlestickData} margin={{ top: 20, right: 20, left: 20, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
