@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import '../styles/style.css';
 import Header from '/components/header';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { useRouter } from 'next/router';

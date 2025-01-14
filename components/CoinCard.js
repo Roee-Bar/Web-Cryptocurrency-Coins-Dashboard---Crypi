@@ -13,7 +13,7 @@ const CoinCard = ({ coin, price }) => {
         <p className="text-xl font-semibold mt-2">
           {price ? `$${price.toFixed(2)}` : 'Loading...'}
         </p>
-        <Link href={`/${coin.symbol}`}>
+        <Link href={`/coin/${coin.symbol}`}>
           <div className="mt-4 text-sm font-medium text-white underline hover:text-gray-200 cursor-pointer">
             View Details
           </div>

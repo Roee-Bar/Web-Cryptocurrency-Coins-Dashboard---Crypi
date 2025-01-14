@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import CoinInfo from '/components/CoinInfo';
 import LiveGraph from '/components/LiveGraph';
 import HistoricalData from '/components/HistoricalData';
