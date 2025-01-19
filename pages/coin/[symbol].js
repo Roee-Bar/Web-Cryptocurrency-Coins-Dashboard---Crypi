@@ -24,11 +24,12 @@ const CoinDetail = () => {
       
       {/* Header Section */}
       <div className="mb-6 text-center">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-white">
-          {symbol?.toUpperCase()} Data
-        </h1>
+        {/* TEST FOR MY SELF
+      <h1 className={`text-3xl md:text-4xl font-extrabold ${
+          isDarkMode ? 'text-white' : 'text-gray-800' }`}>
+     {symbol?.toUpperCase()} Data
+</h1>*/}
       </div>
-
       {/* Main Content Container */}
       <div className="max-w-[1920px] mx-auto space-y-6">
         {/* Top Section: Split into two halves */}
