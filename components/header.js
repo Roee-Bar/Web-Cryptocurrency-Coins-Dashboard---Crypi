@@ -8,17 +8,38 @@ export default function Header() {
   const { isDarkMode, toggleDarkMode } = useTheme();
   const router = useRouter();
 
+  const getPageTitle = () => {
+    if (router.pathname === '/dashboard') {
+      return 'Coin Dashboard';
+    } else if (router.pathname === '/coin/[symbol]') {
+      return `${router.query.symbol?.toUpperCase()} Data`;
+    }
+    return '';
+  };
+
   return (
     <header className={`header p-4 flex justify-between items-center shadow-md
       ${isDarkMode 
         ? 'bg-gradient-to-r from-gray-800 via-gray-900 to-black' 
         : 'bg-white'}`}>
-      {router.pathname !== '/' && (
-        <Link href="/">
-          <IoHomeSharp size={32} className={isDarkMode ? 'text-white' : 'text-black'} />
-        </Link>
-      )}
-      <div className="flex-1 flex justify-end">
+      {/* Left - Home icon */}
+      <div>
+        {router.pathname !== '/' && (
+          <Link href="/">
+            <IoHomeSharp size={32} className={isDarkMode ? 'text-white' : 'text-black'} />
+          </Link>
+        )}
+      </div>
+
+      {/* Center - Title */}
+      <h1 className={`flex-1 text-2xl font-bold text-center ${
+        isDarkMode ? 'text-white' : 'text-gray-800'
+      }`}>
+        {getPageTitle()}
+      </h1>
+
+      {/* Right - Theme toggle button */}
+      <div>
         <button
           onClick={toggleDarkMode}
           className={`relative flex items-center w-24 h-12 rounded-full p-1 transition-colors duration-300 ease-in-out
