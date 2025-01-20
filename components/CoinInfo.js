@@ -25,6 +25,7 @@ const CoinInfo = ({ symbol }) => {
 //
   return (
     <div className="text-center">
+      <p>test</p>
       {coinDetails ? (
         <>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{coinDetails.name}</h2>

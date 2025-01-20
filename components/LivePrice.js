@@ -46,11 +46,13 @@ const LivePrice = ({ symbol }) => {
   }, [symbol]); // Only re-run when the symbol changes
 
   return (
+    
     <div className="mt-4 flex justify-center items-center bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
       {error ? (
         <p className="text-red-600">{error}</p>
       ) : (
         <div className="text-lg font-semibold text-green-500">
+          <p className="text-lg font-semibold text-green-500 flex flex-col items-center justify-center">Live Price</p>
           ${price ? parseFloat(price).toFixed(2) : 'Loading...'}
         </div>
       )}
