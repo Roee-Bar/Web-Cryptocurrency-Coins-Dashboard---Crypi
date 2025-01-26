@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import { useRouter } from 'next/router';
 import { useTheme } from '../../context/ThemeContext';
 import CoinInfo from '/components/CoinInfo';
@@ -8,11 +8,11 @@ import LivePrice from '/components/LivePrice';
 
 const CoinDetail = () => {
   const router = useRouter();
+  //Optional to implement quary check for available coins. or return error.
   const { symbol } = router.query;
   const { isDarkMode } = useTheme();
 
   const [timeRange, setTimeRange] = useState('1d');
-  const [error, setError] = useState(null);
 
   const timeRangeOptions = ['5y', '1y', '1m', '1d'];
 
@@ -24,11 +24,6 @@ const CoinDetail = () => {
       
       {/* Header Section */}
       <div className="mb-6 text-center">
-        {/* TEST FOR MY SELF
-      <h1 className={`text-3xl md:text-4xl font-extrabold ${
-          isDarkMode ? 'text-white' : 'text-gray-800' }`}>
-     {symbol?.toUpperCase()} Data
-</h1>*/}
       </div>
       {/* Main Content Container */}
       <div className="max-w-[1920px] mx-auto space-y-6">
@@ -68,12 +63,6 @@ const CoinDetail = () => {
           />
         </div>
       </div>
-
-      {error && 
-        <div className="text-red-600 text-center mt-6 p-4 rounded-lg bg-red-100">
-          {error}
-        </div>
-      }
     </div>
   );
 };

@@ -6,7 +6,7 @@ export function ThemeProvider({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check localStorage on initial load
+    // Check localStorage on initial load If someone is on dark mode locally then itll be for him at the beggining
     const savedMode = localStorage.getItem('theme');
     if (savedMode === 'dark') {
       document.documentElement.classList.add('dark');

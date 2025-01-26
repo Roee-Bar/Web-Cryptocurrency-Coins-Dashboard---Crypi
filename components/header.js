@@ -10,7 +10,7 @@ export default function Header() {
 
   const getPageTitle = () => {
     if (router.pathname === '/dashboard') {
-      return 'Coin Dashboard';
+      return 'Crypi Coin Dashboard';
     } else if (router.pathname === '/coin/[symbol]') {
       return `${router.query.symbol?.toUpperCase()} Data`;
     }
