@@ -1,10 +1,8 @@
 import "@/styles/globals.css";
 import Header from '/components/header';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }) {
-  const router = useRouter();
   
   return (
     <ThemeProvider>

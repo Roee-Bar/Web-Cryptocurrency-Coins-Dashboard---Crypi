@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { IoHomeSharp, IoMoonSharp, IoSunnySharp } from "react-icons/io5";
 import { useTheme } from '../context/ThemeContext';
