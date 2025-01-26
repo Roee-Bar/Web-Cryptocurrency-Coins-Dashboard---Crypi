@@ -88,7 +88,7 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
             >
               {priceChange >= 0 ? '+' : ''}
               {priceChange} ({percentageChange}%){' '}
-              <span className="text-gray-600 dark:text-gray-400">past {timeRange}</span>
+              <span className="text-gray-600 dark:text-gray-400">Past {timeRange}</span>
             </p>
           )
         )}

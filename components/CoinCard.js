@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const CoinCard = ({ coin, price }) => {
   return (
-    <div className="bg-gradient-to-br from-cyan-500 to-blue-500 dark:from-blue-600 dark:to-blue-800 text-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+    <div className="bg-gradient-to-br from-cyan-500 to-blue-500 dark:from-blue-600 dark:to-blue-800 text-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 flex flex-col items-center justify-center">
       <img
         src={coin.image}
         alt={coin.name}
