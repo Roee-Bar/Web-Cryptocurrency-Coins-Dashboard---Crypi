@@ -8,7 +8,7 @@ const CoinCard = ({ coin, price }) => {
         alt={coin.name}
         className="w-16 h-16 object-cover rounded-full border-2 border-white mb-4"
       />
-      <div>
+      <div className="text-center">
         <h2 className="text-lg font-bold truncate">{coin.name}</h2>
         <p className="text-xl font-semibold mt-2">
           {price ? `$${price.toFixed(2)}` : 'Loading...'}
