@@ -48,7 +48,7 @@ const Dashboard = () => {
 
   //Optional Create Dashboard component that generates coin card
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 transition-colors duration-200 px-4">
+    <div className="min-h-screen flex flex-col justify-start items-center bg-white dark:bg-gray-900 transition-colors duration-200 px-4 pt-24">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-screen-lg w-full">
         {COINS.map((coin) => (
           <CoinCard key={coin.symbol} coin={coin} price={prices[coin.symbol]} />
