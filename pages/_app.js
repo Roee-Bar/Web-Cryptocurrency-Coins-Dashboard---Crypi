@@ -1,3 +1,4 @@
+//ensures the theme (light/dark) is applied globally across the app.
 import "@/styles/globals.css";
 import Header from '/components/header';
 import { ThemeProvider } from '@/context/ThemeContext';

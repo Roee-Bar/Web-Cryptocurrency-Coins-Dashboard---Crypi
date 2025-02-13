@@ -1,3 +1,8 @@
+/**
+ * ThemeProvider component manages the global theme (dark/light mode) for the app.
+ * It uses localStorage to remember the user's theme preference across sessions.
+ */
+
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();

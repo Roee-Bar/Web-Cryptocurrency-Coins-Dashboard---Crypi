@@ -1,3 +1,7 @@
+/**
+ * CoinInfo Component
+ * Displays details of a cryptocurrency including its name, symbol, and description.
+ */
 import React, { useState, useEffect } from 'react';
 
 const CoinInfo = ({ symbol }) => {

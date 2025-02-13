@@ -1,3 +1,10 @@
+/**
+ * Header Component
+ * Displays the application header with a home button, dynamic page title, and a dark mode toggle.
+ * 
+ * returns The header with navigation and theme control.
+ */
+
 import Link from 'next/link';
 import { IoHomeSharp, IoMoonSharp, IoSunnySharp } from "react-icons/io5";
 import { useTheme } from '../context/ThemeContext';

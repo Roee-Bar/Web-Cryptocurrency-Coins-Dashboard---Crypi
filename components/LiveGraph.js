@@ -1,3 +1,8 @@
+/**
+ * LiveGraph component fetches and displays live candlestick data for a given symbol.
+ * It uses WebSocket to connect to Binance's real-time candlestick data feed and updates 
+ * the chart with the latest data every minute.
+ */
 import React, { useState, useEffect } from 'react';
 import { ResponsiveContainer, ComposedChart, XAxis, YAxis, Tooltip, CartesianGrid, Bar } from 'recharts';
 

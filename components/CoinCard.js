@@ -1,3 +1,7 @@
+/**
+ * CoinCard Component
+ * Displays a cryptocurrency card with its image, name, price, and a link to details.
+ **/
 import Link from 'next/link';
 
 const CoinCard = ({ coin, price }) => {

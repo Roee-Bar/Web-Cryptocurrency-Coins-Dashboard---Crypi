@@ -1,3 +1,8 @@
+/**
+ * StudentCard component displays a student's profile information including their name, workplace, 
+ * profile image, and LinkedIn profile link. The design adapts based on the current theme (light or dark mode).
+ */
+
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 

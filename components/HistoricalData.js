@@ -1,3 +1,7 @@
+/**
+ * HistoricalData Component
+ * Displays historical price data for a cryptocurrency as a bar chart with time range selection.
+ */
 import React, { useState, useEffect } from 'react';
 import {
   ResponsiveContainer,
@@ -16,6 +20,8 @@ const HistoricalData = ({ symbol, timeRange, setTimeRange, timeRangeOptions }) =
   const [percentageChange, setPercentageChange] = useState(null);
   const [loadingChange, setLoadingChange] = useState(false);
 
+ //Fetches historical price data for a given cryptocurrency symbol and time range.
+ //Updates state with formatted data, price change, and percentage change.
   useEffect(() => {
     if (symbol) {
       const fetchHistoricalData = async () => {
