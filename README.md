@@ -6,7 +6,6 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![Binance API](https://img.shields.io/badge/Binance_API-WebSocket-F0B90B?logo=binance)](https://binance-docs.github.io/apidocs/)
 
-![Crypi Dashboard](https://cryptoproject-jub8.vercel.app/)
 
 ## 🚀 Live Demo
 
